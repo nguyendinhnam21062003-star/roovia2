@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Xem thông tin chi tiết chỗ ở trên StayBridge.">
+  <title>Chi tiết phòng — StayBridge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/room-detail.js" defer></script>
+</head>
+<body class="detail-page">
+  <header class="site-header header-solid" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="StayBridge - Trang chủ">
+        <span class="brand-mark"><i data-lucide="home"></i></span>
+        <span class="brand-copy"><strong>StayBridge</strong><small>Home away from home</small></span>
+      </a>
+      <button class="icon-button mobile-menu-button" id="mobileMenuButton" type="button" aria-label="Mở menu" aria-expanded="false"><i data-lucide="menu"></i></button>
+      <nav class="main-nav" id="mainNav" aria-label="Điều hướng chính">
+        <a href="index.html">Trang chủ</a>
+        <a href="index.html#rooms">Tìm phòng</a>
+        <a href="index.html#destinations">Khu vực</a>
+        <a href="index.html#partners">Đối tác</a>
+        <a href="#contact">Liên hệ</a>
+      </nav>
+      <button class="button button-primary header-cta open-contact" type="button">Nhận tư vấn</button>
+    </div>
+  </header>
+
+  <main class="detail-main">
+    <div class="container breadcrumb" aria-label="Đường dẫn">
+      <a href="index.html">Trang chủ</a><i data-lucide="chevron-right"></i><a href="index.html#rooms">Tìm phòng</a><i data-lucide="chevron-right"></i><span id="breadcrumbRoom">Chi tiết phòng</span>
+    </div>
+
+    <section class="detail-gallery-layout" aria-label="Hình ảnh và thông tin đặt phòng">
+      <div class="container detail-gallery-grid">
+        <div class="gallery-panel">
+          <div class="gallery-main-wrap">
+            <button class="gallery-image-button gallery-main" id="galleryMainButton" type="button" aria-label="Mở ảnh chính">
+              <img id="galleryMainImage" src="" alt="Ảnh chính của phòng">
+              <span class="gallery-counter" id="galleryCounter">1 / 4</span>
+            </button>
+            <button class="button button-light gallery-view-all" id="viewAllPhotos" type="button"><i data-lucide="images"></i>Xem tất cả ảnh</button>
+          </div>
+          <div class="gallery-thumbs" id="galleryThumbs"></div>
+        </div>
+
+        <aside class="booking-card" aria-labelledby="bookingTitle">
+          <span class="booking-kicker">Giá tham khảo</span>
+          <div class="booking-price" id="bookingTitle"><strong id="bookingPrice">0đ</strong><span>/đêm</span></div>
+          <form id="bookingForm">
+            <label><span>Ngày nhận phòng</span><input id="detailCheckIn" type="date" required></label>
+            <label><span>Ngày trả phòng</span><input id="detailCheckOut" type="date" required></label>
+            <label><span>Số khách</span><select id="detailGuests"><option value="1">1 khách</option><option value="2" selected>2 khách</option><option value="3">3 khách</option><option value="4">4 khách</option><option value="6">6 khách</option><option value="8">8 khách</option></select></label>
+            <button class="button button-primary full-width open-contact" type="submit">Liên hệ ngay</button>
+          </form>
+          <div class="booking-assurance"><span><i data-lucide="shield-check"></i>Không cần thanh toán trước</span><span><i data-lucide="zap"></i>Phản hồi nhanh</span><span><i data-lucide="headphones"></i>Hỗ trợ 24/7</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section detail-content-section">
+      <div class="container detail-content-grid">
+        <div class="detail-primary">
+          <div class="room-title-block">
+            <div>
+              <div class="room-title-meta"><span class="rating-badge"><i data-lucide="star"></i><strong id="detailRating">0.0</strong></span><span id="detailReviews">0 đánh giá</span><span class="dot-separator"></span><span id="detailType">Homestay</span></div>
+              <h1 id="detailName">Đang tải thông tin phòng...</h1>
+              <p class="detail-address"><i data-lucide="map-pin"></i><span id="detailAddress"></span></p>
+            </div>
+            <div class="room-title-actions">
+              <button class="button button-secondary" id="shareButton" type="button"><i data-lucide="share-2"></i>Chia sẻ</button>
+              <button class="button button-secondary" id="detailFavorite" type="button" aria-pressed="false"><i data-lucide="heart"></i>Yêu thích</button>
+            </div>
+          </div>
+
+          <div class="detail-facts" id="detailFacts"></div>
+
+          <div class="detail-info-cards">
+            <article class="detail-card description-card">
+              <div class="detail-card-icon"><i data-lucide="align-left"></i></div>
+              <h2>Mô tả phòng</h2>
+              <div class="description-copy collapsed" id="descriptionCopy"></div>
+              <button class="text-button" id="toggleDescription" type="button">Xem thêm <i data-lucide="chevron-down"></i></button>
+            </article>
+
+            <article class="detail-card">
+              <div class="detail-card-icon"><i data-lucide="sparkles"></i></div>
+              <h2>Tiện nghi nổi bật</h2>
+              <ul class="icon-list" id="highlightAmenities"></ul>
+            </article>
+
+            <article class="detail-card">
+              <div class="detail-card-icon"><i data-lucide="bed-double"></i></div>
+              <h2>Thông tin phòng</h2>
+              <dl class="detail-definition" id="roomInformation"></dl>
+            </article>
+
+            <article class="detail-card">
+              <div class="detail-card-icon"><i data-lucide="clipboard-check"></i></div>
+              <h2>Chính sách lưu trú</h2>
+              <dl class="detail-definition" id="roomPolicies"></dl>
+            </article>
+          </div>
+
+          <section class="detail-section-block" aria-labelledby="allAmenitiesTitle">
+            <div class="section-heading compact-heading"><span class="eyebrow">Đầy đủ và tiện lợi</span><h2 id="allAmenitiesTitle">Tất cả tiện nghi</h2></div>
+            <div class="amenity-groups" id="amenityGroups"></div>
+          </section>
+
+          <section class="detail-section-block" aria-labelledby="locationTitle">
+            <div class="section-heading compact-heading"><span class="eyebrow">Vị trí lưu trú</span><h2 id="locationTitle">Khu vực xung quanh</h2><p id="mapAddress"></p></div>
+            <div class="map-mock">
+              <iframe id="mapFrame" title="Bản đồ vị trí phòng" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+              <div class="map-fallback"><span><i data-lucide="map-pinned"></i></span><strong id="mapCity">Việt Nam</strong></div>
+              <a class="button button-light map-button" id="mapExternalLink" href="#" target="_blank" rel="noopener"><i data-lucide="external-link"></i>Xem trên bản đồ</a>
+            </div>
+          </section>
+
+          <section class="detail-section-block reviews-section" aria-labelledby="reviewsTitle">
+            <div class="review-overview">
+              <div class="review-score"><span id="reviewScore">0.0</span><div><strong>Tuyệt vời</strong><small id="reviewCountLabel">Dựa trên 0 đánh giá</small></div></div>
+              <div class="review-metrics" id="reviewMetrics"></div>
+            </div>
+            <div class="section-heading compact-heading"><span class="eyebrow">Trải nghiệm thực tế</span><h2 id="reviewsTitle">Đánh giá của khách hàng</h2></div>
+            <div class="review-list" id="reviewList"></div>
+            <button class="button button-secondary" id="showAllReviews" type="button">Xem tất cả đánh giá</button>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="section similar-section" aria-labelledby="similarTitle">
+      <div class="container">
+        <div class="section-heading heading-with-actions"><div><span class="eyebrow">Có thể bạn quan tâm</span><h2 id="similarTitle">Phòng tương tự</h2><p>Các lựa chọn cùng khu vực hoặc cùng loại hình lưu trú.</p></div><a class="button button-secondary" href="index.html#rooms">Xem tất cả</a></div>
+        <div class="similar-grid" id="similarGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <div class="container footer-grid">
+      <div class="footer-brand"><a class="brand brand-light" href="index.html"><span class="brand-mark"><i data-lucide="home"></i></span><span class="brand-copy"><strong>StayBridge</strong><small>Home away from home</small></span></a><p>Nền tảng giới thiệu chỗ ở và kết nối khách hàng với đội ngũ tư vấn.</p></div>
+      <div><h3>Liên kết</h3><a href="index.html">Trang chủ</a><a href="index.html#rooms">Tìm phòng</a><a href="index.html#destinations">Khu vực</a></div>
+      <div><h3>Hỗ trợ</h3><a href="#">Câu hỏi thường gặp</a><a href="#">Quy trình liên hệ</a><a href="#">Chính sách bảo mật</a></div>
+      <div><h3>Liên hệ</h3><p class="footer-contact"><i data-lucide="phone"></i>0901 234 567</p><p class="footer-contact"><i data-lucide="mail"></i>hello@staybridge.vn</p></div>
+    </div>
+    <div class="container footer-bottom"><span>© 2026 StayBridge. Giao diện frontend demo.</span><span>Home away from home.</span></div>
+  </footer>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Thư viện ảnh">
+    <div class="lightbox-backdrop" data-close-lightbox></div>
+    <button class="icon-button lightbox-close" type="button" data-close-lightbox aria-label="Đóng thư viện"><i data-lucide="x"></i></button>
+    <button class="icon-button lightbox-nav lightbox-prev" id="lightboxPrev" type="button" aria-label="Ảnh trước"><i data-lucide="chevron-left"></i></button>
+    <figure><img id="lightboxImage" src="" alt="Ảnh phòng phóng lớn"><figcaption id="lightboxCaption">1 / 4</figcaption></figure>
+    <button class="icon-button lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="Ảnh tiếp theo"><i data-lucide="chevron-right"></i></button>
+  </div>
+
+  <div class="modal" id="contactModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-dialog">
+      <button class="icon-button modal-close" type="button" data-close-modal aria-label="Đóng biểu mẫu"><i data-lucide="x"></i></button>
+      <span class="eyebrow">StayBridge hỗ trợ</span><h2 id="contactModalTitle">Liên hệ đặt phòng</h2><p id="contactRoomName">Đội ngũ tư vấn sẽ liên hệ lại để xác nhận thông tin.</p>
+      <form id="contactForm" novalidate>
+        <div class="form-grid">
+          <label><span>Họ và tên *</span><input id="customerName" type="text" placeholder="Nguyễn Văn A" required></label>
+          <label><span>Số điện thoại *</span><input id="customerPhone" type="tel" placeholder="09xx xxx xxx" required></label>
+          <label><span>Ngày nhận phòng *</span><input id="contactCheckIn" type="date" required></label>
+          <label><span>Số khách *</span><select id="contactGuests" required><option value="">Chọn số khách</option><option>1</option><option>2</option><option>3</option><option>4</option><option>6</option><option>8</option></select></label>
+          <label class="form-full"><span>Nội dung yêu cầu</span><textarea id="customerMessage" rows="4" placeholder="Thời gian lưu trú hoặc yêu cầu đặc biệt..."></textarea></label>
+        </div>
+        <p class="form-error" id="contactError" role="alert"></p>
+        <button class="button button-primary full-width" type="submit">Gửi yêu cầu</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><i data-lucide="circle-check"></i><span>Gửi yêu cầu thành công.</span></div>
+</body>
+</html>

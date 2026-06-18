@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="StayBridge giúp bạn tìm homestay, căn hộ, nhà nghỉ và khách sạn phù hợp tại các điểm đến nổi bật ở Việt Nam.">
+  <title>StayBridge — Tìm chỗ ở lý tưởng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="StayBridge - Trang chủ">
+        <span class="brand-mark"><i data-lucide="home"></i></span>
+        <span class="brand-copy">
+          <strong>StayBridge</strong>
+          <small>Home away from home</small>
+        </span>
+      </a>
+
+      <button class="icon-button mobile-menu-button" id="mobileMenuButton" type="button" aria-label="Mở menu" aria-expanded="false">
+        <i data-lucide="menu"></i>
+      </button>
+
+      <nav class="main-nav" id="mainNav" aria-label="Điều hướng chính">
+        <a href="#top">Trang chủ</a>
+        <a href="#rooms">Tìm phòng</a>
+        <a href="#destinations">Khu vực</a>
+        <a href="#partners">Đối tác</a>
+        <a href="#contact">Liên hệ</a>
+      </nav>
+
+      <button class="button button-primary header-cta open-contact" type="button" data-room-name="Tư vấn chỗ ở">
+        Nhận tư vấn
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content">
+        <span class="eyebrow hero-eyebrow">Chỗ ở được chọn lọc</span>
+        <h1 id="heroTitle">Tìm chỗ ở lý tưởng<br><span>Như ở nhà, dù bạn ở đâu</span></h1>
+        <p>Hàng ngàn phòng đẹp – chủ nhà thân thiện – giá tốt mỗi ngày</p>
+      </div>
+
+      <div class="container hero-search-wrap">
+        <form class="hero-search" id="heroSearchForm">
+          <label class="search-field">
+            <span class="field-icon"><i data-lucide="map-pin"></i></span>
+            <span class="field-copy">
+              <small>Điểm đến</small>
+              <input id="heroDestination" type="text" placeholder="Bạn muốn đi đâu?" autocomplete="off">
+            </span>
+          </label>
+          <label class="search-field">
+            <span class="field-icon"><i data-lucide="calendar-days"></i></span>
+            <span class="field-copy">
+              <small>Nhận phòng</small>
+              <input id="heroCheckIn" type="date">
+            </span>
+          </label>
+          <label class="search-field">
+            <span class="field-icon"><i data-lucide="calendar-check"></i></span>
+            <span class="field-copy">
+              <small>Trả phòng</small>
+              <input id="heroCheckOut" type="date">
+            </span>
+          </label>
+          <label class="search-field">
+            <span class="field-icon"><i data-lucide="users"></i></span>
+            <span class="field-copy">
+              <small>Số khách</small>
+              <select id="heroGuests">
+                <option value="1">1 khách</option>
+                <option value="2" selected>2 khách</option>
+                <option value="3">3 khách</option>
+                <option value="4">4 khách</option>
+                <option value="6">6 khách</option>
+                <option value="8">8 khách</option>
+              </select>
+            </span>
+          </label>
+          <button class="button button-primary hero-search-button" type="submit">
+            <i data-lucide="search"></i>
+            Tìm phòng
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <section class="section favorites-section" aria-labelledby="favoriteTitle">
+      <div class="container">
+        <div class="section-heading heading-with-actions">
+          <div>
+            <span class="eyebrow">Gợi ý nổi bật</span>
+            <h2 id="favoriteTitle">Chỗ ở được yêu thích</h2>
+            <p>Những lựa chọn có đánh giá tốt và được khách hàng quan tâm nhiều.</p>
+          </div>
+          <div class="slider-actions" aria-label="Điều khiển danh sách nổi bật">
+            <button class="icon-button" id="favoritePrev" type="button" aria-label="Xem mục trước">
+              <i data-lucide="arrow-left"></i>
+            </button>
+            <button class="icon-button" id="favoriteNext" type="button" aria-label="Xem mục tiếp theo">
+              <i data-lucide="arrow-right"></i>
+            </button>
+          </div>
+        </div>
+        <div class="favorite-slider" id="favoriteSlider"></div>
+      </div>
+    </section>
+
+    <section class="section rooms-section" id="rooms" aria-labelledby="roomsTitle">
+      <div class="container">
+        <div class="section-heading rooms-heading">
+          <div>
+            <span class="eyebrow">Tìm theo nhu cầu</span>
+            <h2 id="roomsTitle">Chọn phòng phù hợp với bạn</h2>
+            <p>Lọc nhanh theo loại hình, khu vực, giá và tiện nghi.</p>
+          </div>
+          <button class="button button-secondary mobile-filter-button" id="mobileFilterButton" type="button">
+            <i data-lucide="sliders-horizontal"></i>
+            Bộ lọc
+          </button>
+        </div>
+
+        <div class="listing-layout">
+          <aside class="filter-sidebar" id="filterSidebar" aria-label="Bộ lọc phòng">
+            <div class="filter-drawer-head">
+              <div>
+                <span class="eyebrow">Tùy chọn</span>
+                <h3>Bộ lọc</h3>
+              </div>
+              <button class="icon-button close-filter-button" id="closeFilterButton" type="button" aria-label="Đóng bộ lọc">
+                <i data-lucide="x"></i>
+              </button>
+            </div>
+
+            <div class="filter-group">
+              <h4>Loại hình</h4>
+              <div id="typeFilters" class="check-list"></div>
+            </div>
+
+            <div class="filter-group">
+              <div class="filter-title-row">
+                <h4>Mức giá mỗi đêm</h4>
+                <span id="priceValue">2.000.000đ</span>
+              </div>
+              <input class="price-range" id="priceRange" type="range" min="200000" max="2000000" step="50000" value="2000000" aria-label="Giá tối đa mỗi đêm">
+              <div class="range-labels"><span>200.000đ</span><span>2.000.000đ</span></div>
+            </div>
+
+            <div class="filter-group">
+              <h4>Khu vực</h4>
+              <div id="cityFilters" class="check-list"></div>
+            </div>
+
+            <div class="filter-group">
+              <h4>Tiện nghi</h4>
+              <div id="amenityFilters" class="check-list"></div>
+            </div>
+
+            <button class="button button-ghost full-width" id="clearFilters" type="button">
+              <i data-lucide="rotate-ccw"></i>
+              Xóa bộ lọc
+            </button>
+          </aside>
+
+          <div class="filter-backdrop" id="filterBackdrop"></div>
+
+          <div class="listing-main">
+            <div class="listing-toolbar">
+              <label class="toolbar-search">
+                <i data-lucide="search"></i>
+                <input id="roomSearch" type="search" placeholder="Tìm theo tên phòng hoặc địa điểm">
+              </label>
+              <div class="result-meta">
+                <strong id="resultCount">0 kết quả</strong>
+                <label class="sort-label">
+                  <span>Sắp xếp</span>
+                  <select id="sortRooms">
+                    <option value="popular">Phổ biến nhất</option>
+                    <option value="price-asc">Giá thấp đến cao</option>
+                    <option value="price-desc">Giá cao đến thấp</option>
+                    <option value="rating">Đánh giá cao nhất</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div class="active-filters" id="activeFilters" aria-live="polite"></div>
+            <div class="room-grid" id="roomGrid"></div>
+            <div class="empty-state" id="emptyState" hidden>
+              <span class="empty-icon"><i data-lucide="search-x"></i></span>
+              <h3>Không tìm thấy phòng phù hợp</h3>
+              <p>Thử thay đổi khu vực, mức giá hoặc bỏ bớt tiện nghi đang chọn.</p>
+              <button class="button button-primary" id="emptyClearButton" type="button">Xóa bộ lọc</button>
+            </div>
+          </div>
+
+          <aside class="promo-sidebar" aria-label="Ưu đãi và lợi ích">
+            <div class="promo-card">
+              <span class="promo-kicker">Ưu đãi dành riêng cho bạn</span>
+              <strong>Giảm đến 20%</strong>
+              <p>Khi đặt phòng đối tác StayBridge</p>
+              <button class="button button-light destination-trigger" type="button" data-city="Đà Lạt">Khám phá ngay</button>
+              <span class="promo-shape promo-shape-one"></span>
+              <span class="promo-shape promo-shape-two"></span>
+            </div>
+
+            <div class="benefits-card">
+              <div class="benefit-item"><span><i data-lucide="badge-check"></i></span><div><strong>Chủ nhà xác thực</strong><small>Thông tin được kiểm tra</small></div></div>
+              <div class="benefit-item"><span><i data-lucide="headphones"></i></span><div><strong>Hỗ trợ 24/7</strong><small>Tư vấn trước và trong chuyến đi</small></div></div>
+              <div class="benefit-item"><span><i data-lucide="wallet-cards"></i></span><div><strong>Thanh toán linh hoạt</strong><small>Thỏa thuận trực tiếp khi liên hệ</small></div></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section destinations-section" id="destinations" aria-labelledby="destinationTitle">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Khám phá Việt Nam</span>
+          <h2 id="destinationTitle">Điểm đến phổ biến</h2>
+          <p>Chọn một khu vực để xem nhanh các chỗ ở đang có.</p>
+        </div>
+        <div class="destination-grid" id="destinationGrid"></div>
+      </div>
+    </section>
+
+    <section class="section partner-section" id="partners" aria-labelledby="partnerTitle">
+      <div class="container partner-panel">
+        <div>
+          <span class="eyebrow">Dành cho chủ chỗ ở</span>
+          <h2 id="partnerTitle">Kết nối căn phòng của bạn với nhiều khách hàng hơn</h2>
+          <p>StayBridge hỗ trợ giới thiệu chỗ ở, tiếp nhận nhu cầu và kết nối khách hàng tiềm năng mà không yêu cầu hệ thống vận hành phức tạp.</p>
+        </div>
+        <button class="button button-primary open-contact" type="button" data-room-name="Đăng ký đối tác">Trở thành đối tác</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a class="brand brand-light" href="index.html">
+          <span class="brand-mark"><i data-lucide="home"></i></span>
+          <span class="brand-copy"><strong>StayBridge</strong><small>Home away from home</small></span>
+        </a>
+        <p>Nền tảng giới thiệu chỗ ở và kết nối khách hàng với đội ngũ tư vấn tại các điểm đến nổi bật.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook"><i data-lucide="thumbs-up"></i></a>
+          <a href="#" aria-label="TikTok"><i data-lucide="music-2"></i></a>
+          <a href="#" aria-label="Zalo"><i data-lucide="message-circle"></i></a>
+        </div>
+      </div>
+      <div><h3>Liên kết nhanh</h3><a href="#top">Trang chủ</a><a href="#rooms">Tìm phòng</a><a href="#destinations">Khu vực</a><a href="#partners">Đối tác</a></div>
+      <div><h3>Khu vực nổi bật</h3><a href="#rooms" class="destination-trigger" data-city="Đà Lạt">Đà Lạt</a><a href="#rooms" class="destination-trigger" data-city="Đà Nẵng">Đà Nẵng</a><a href="#rooms" class="destination-trigger" data-city="Hội An">Hội An</a><a href="#rooms" class="destination-trigger" data-city="Hạ Long">Hạ Long</a></div>
+      <div><h3>Chính sách</h3><a href="#">Điều khoản sử dụng</a><a href="#">Chính sách bảo mật</a><a href="#">Quy trình liên hệ</a><a href="#">Câu hỏi thường gặp</a></div>
+      <div><h3>Liên hệ</h3><p class="footer-contact"><i data-lucide="phone"></i> 0901 234 567</p><p class="footer-contact"><i data-lucide="mail"></i> hello@staybridge.vn</p><p class="footer-contact"><i data-lucide="map-pin"></i> Việt Nam</p></div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© 2026 StayBridge. Giao diện frontend demo.</span>
+      <span>Thiết kế cho trải nghiệm tìm phòng thuận tiện.</span>
+    </div>
+  </footer>
+
+  <div class="modal" id="contactModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-dialog">
+      <button class="icon-button modal-close" type="button" data-close-modal aria-label="Đóng biểu mẫu"><i data-lucide="x"></i></button>
+      <span class="eyebrow">StayBridge hỗ trợ</span>
+      <h2 id="contactModalTitle">Gửi yêu cầu tư vấn</h2>
+      <p id="contactRoomName">Đội ngũ tư vấn sẽ liên hệ lại để xác nhận thông tin.</p>
+      <form id="contactForm" novalidate>
+        <input type="hidden" id="contactRoomInput">
+        <div class="form-grid">
+          <label><span>Họ và tên *</span><input id="customerName" name="name" type="text" placeholder="Nguyễn Văn A" required></label>
+          <label><span>Số điện thoại *</span><input id="customerPhone" name="phone" type="tel" placeholder="09xx xxx xxx" required></label>
+          <label><span>Ngày nhận phòng *</span><input id="contactCheckIn" name="checkin" type="date" required></label>
+          <label><span>Số khách *</span><select id="contactGuests" name="guests" required><option value="">Chọn số khách</option><option>1</option><option>2</option><option>3</option><option>4</option><option>6</option><option>8</option></select></label>
+          <label class="form-full"><span>Nội dung yêu cầu</span><textarea id="customerMessage" name="message" rows="4" placeholder="Thời gian lưu trú, loại phòng hoặc yêu cầu đặc biệt..."></textarea></label>
+        </div>
+        <p class="form-error" id="contactError" role="alert"></p>
+        <button class="button button-primary full-width" type="submit">Gửi yêu cầu</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <i data-lucide="circle-check"></i><span>Gửi yêu cầu thành công.</span>
+  </div>
+</body>
+</html>
