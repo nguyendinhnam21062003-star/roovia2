@@ -131,6 +131,10 @@
   .chat-widget { height: min(88vh, 760px); border-radius: 22px 22px 0 0; }
   .chat-widget-shell { width: calc(100vw - 20px); }
   .chat-widget-handle { margin-top: 10px; }
+  .chat-widget-header { padding: 14px 14px 13px; }
+  .chat-widget-avatar { width: 40px; height: 40px; border-radius: 14px; }
+  .chat-widget-title strong { font-size: 14px; }
+  .chat-widget-status { font-size: 10px; }
   .chat-widget--bottom {
     height: min(88vh, 760px);
     border-radius: 22px 22px 0 0;
@@ -141,18 +145,16 @@
     width: 56px;
     height: 56px;
   }
-  .chat-widget-thread { width: 100%; padding: 12px 10px 14px; }
+  .chat-widget-thread { width: 100%; padding: 14px 10px 12px; gap: 12px; }
+  .chat-reply-card { padding: 15px; border-radius: 18px; }
+  .chat-summary-grid { grid-template-columns: 1fr; }
+  .chat-support-row { flex-direction: column; align-items: stretch; }
+  .chat-reply-actions { justify-content: flex-start; }
+  .chat-action-link,
+  .chat-action-tag { width: 100%; justify-content: center; }
   .chat-widget-composer { width: 100%; padding: 12px 0 14px; }
   .chat-widget-input-shell { gap: 6px; padding: 6px; }
   .chat-widget-send { min-width: 92px; padding: 0 12px; }
-  .chat-reply-actions {
-    flex-direction: column;
-  }
-  .chat-action-link,
-  .chat-action-tag {
-    width: 100%;
-    justify-content: center;
-  }
   .partner-panel { padding: 30px 24px; }
   .partner-panel .button { width: 100%; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
@@ -207,7 +209,8 @@
     right: 10px;
     bottom: 10px;
   }
-  .chat-reply-card { padding: 12px; }
+  .chat-reply-card { padding: 13px; }
+  .chat-summary-item { padding: 11px 12px; }
   .drawer-lab-panel-header { padding: 16px 14px 14px; }
   .drawer-lab-panel-copy h2 { font-size: 21px; }
   .drawer-lab-card { padding: 20px; }
