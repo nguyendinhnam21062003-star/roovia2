@@ -151,13 +151,7 @@ export default function ChatWidget({
           <ChatPanel messages={messages} typing={typing} onClose={onClose} onQuickAction={onQuickAction} onSendMessage={onSendMessage} />
         </div>
       ) : (
-        <Drawer.Root
-          open={open}
-          onOpenChange={nextOpen => (nextOpen ? onOpen() : onClose())}
-          shouldScaleBackground={false}
-          fixed
-          repositionInputs={false}
-        >
+        <Drawer.Root open={open} onOpenChange={nextOpen => (nextOpen ? onOpen() : onClose())} shouldScaleBackground={false}>
           <Drawer.Portal>
             <Drawer.Overlay className="chat-widget-mobile-overlay" />
             <Drawer.Content className="chat-widget-mobile">
