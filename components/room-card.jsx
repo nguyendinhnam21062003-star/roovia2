@@ -79,7 +79,7 @@ export default function RoomCard({ room, favorite = false, onToggleFavorite, onC
             {room.oldPrice ? <del>{formatCurrency(room.oldPrice)}</del> : null}
           </div>
           {onContact ? (
-            <button className="button button-primary open-contact" type="button" onClick={onContact}>
+            <button className="button button-primary open-contact" type="button" onClick={() => onContact(room)}>
               {contactLabel}
             </button>
           ) : null}

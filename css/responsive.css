@@ -126,35 +126,37 @@
   .sort-label select { flex: 1; }
   .room-card-top h3 { font-size: 18px; }
   .room-card-bottom .button { min-height: 44px; }
-  .destination-grid { grid-template-columns: 1fr; }
-  .destination-card { min-height: 250px; }
-  .chat-widget { height: min(88vh, 760px); border-radius: 22px 22px 0 0; }
-  .chat-widget-shell { width: calc(100vw - 20px); }
-  .chat-widget-handle { margin-top: 10px; }
-  .chat-widget-header { padding: 14px 14px 13px; }
-  .chat-widget-avatar { width: 40px; height: 40px; border-radius: 14px; }
-  .chat-widget-title strong { font-size: 14px; }
-  .chat-widget-status { font-size: 10px; }
-  .chat-widget--bottom {
-    height: min(88vh, 760px);
-    border-radius: 22px 22px 0 0;
-  }
   .chat-launcher {
-    right: 10px;
-    bottom: 10px;
+    right: 12px;
+    bottom: 12px;
     width: 56px;
     height: 56px;
   }
-  .chat-widget-thread { width: 100%; padding: 14px 10px 12px; gap: 12px; }
-  .chat-reply-card { padding: 15px; border-radius: 18px; }
-  .chat-summary-grid { grid-template-columns: 1fr; }
-  .chat-support-row { flex-direction: column; align-items: stretch; }
-  .chat-reply-actions { justify-content: flex-start; }
-  .chat-action-link,
-  .chat-action-tag { width: 100%; justify-content: center; }
-  .chat-widget-composer { width: 100%; padding: 12px 0 14px; }
-  .chat-widget-input-shell { gap: 6px; padding: 6px; }
-  .chat-widget-send { min-width: 92px; padding: 0 12px; }
+  .chat-widget-desktop { display: none; }
+  .chat-widget-mobile-overlay,
+  .chat-widget-mobile { display: block; }
+  .chat-widget-mobile .chat-widget-panel {
+    height: 100%;
+    border-radius: 24px 24px 18px 18px;
+  }
+  .chat-widget-mobile .chat-widget-thread {
+    padding: 14px 10px;
+  }
+  .chat-widget-mobile .chat-message {
+    max-width: 100%;
+  }
+  .chat-widget-mobile .chat-quick-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .chat-widget-mobile .chat-widget-composer {
+    padding: 12px 10px 14px;
+  }
+  .chat-widget-mobile .chat-widget-send {
+    min-width: 84px;
+  }
+  .destination-grid { grid-template-columns: 1fr; }
+  .destination-card { min-height: 250px; }
   .partner-panel { padding: 30px 24px; }
   .partner-panel .button { width: 100%; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
@@ -199,18 +201,28 @@
   .mobile-filter-button { width: 100%; }
   .room-card-bottom { align-items: stretch; flex-direction: column; }
   .room-card-bottom .button { width: 100%; }
+  .chat-widget-mobile {
+    height: min(88vh, 760px);
+    padding: 0 6px 6px;
+  }
+  .chat-widget-panel { border-radius: 22px; }
+  .chat-widget-header {
+    padding: 14px;
+  }
+  .chat-widget-brand strong { font-size: 14px; }
+  .chat-widget-brand span { font-size: 10px; }
+  .chat-widget-composer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .chat-widget-send {
+    width: 100%;
+  }
   .footer-grid { grid-template-columns: 1fr; }
   .footer-brand { grid-column: auto; }
   .detail-facts { grid-template-columns: 1fr; }
   .room-title-actions { flex-direction: column; }
   .amenity-group ul { grid-template-columns: 1fr; }
-  .chat-message { max-width: 92%; }
-  .chat-launcher {
-    right: 10px;
-    bottom: 10px;
-  }
-  .chat-reply-card { padding: 13px; }
-  .chat-summary-item { padding: 11px 12px; }
   .drawer-lab-panel-header { padding: 16px 14px 14px; }
   .drawer-lab-panel-copy h2 { font-size: 21px; }
   .drawer-lab-card { padding: 20px; }

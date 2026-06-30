@@ -1,9 +1,10 @@
 "use client";
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { addDaysISO, todayISO } from '../lib/date-utils';
-import ChatBubble from './chat-bubble';
+import { useRooviaChat } from '../lib/use-roovia-chat';
+import ChatWidget from './chat-widget';
 import RoomCard from './room-card';
 import SiteHeader from './site-header';
 
@@ -51,7 +52,7 @@ const amenityGroups = [
   }
 ];
 
-export default function RoomDetailClient({ room, similarRooms, reviews, initialToday: initialTodayProp }) {
+export default function RoomDetailClient({ room, similarRooms, reviews, allRooms, initialToday: initialTodayProp }) {
   const initialToday = initialTodayProp || todayISO();
   const initialTomorrow = addDaysISO(initialToday, 1);
   const [favorites, setFavorites] = useState([]);
@@ -60,20 +61,14 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
   const [reviewsExpanded, setReviewsExpanded] = useState(false);
   const [descriptionCollapsed, setDescriptionCollapsed] = useState(true);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [contactMode, setContactMode] = useState('consultation');
-  const [contactRoomName, setContactRoomName] = useState(room.name);
-  const [customerName, setCustomerName] = useState('');
-  const [customerPhone, setCustomerPhone] = useState('');
-  const [contactCheckIn, setContactCheckIn] = useState(initialToday);
-  const [contactGuests, setContactGuests] = useState('');
-  const [customerMessage, setCustomerMessage] = useState('');
-  const [contactError, setContactError] = useState('');
-  const [toast, setToast] = useState('');
   const [detailCheckIn, setDetailCheckIn] = useState(initialToday);
   const [detailCheckOut, setDetailCheckOut] = useState(initialTomorrow);
   const [detailGuests, setDetailGuests] = useState('2');
-  const toastTimerRef = useRef(null);
+  const chat = useRooviaChat({
+    destinations: Array.from(new Set((allRooms || [room, ...similarRooms]).map(item => item.city))),
+    getRoomCountByCity: city => (allRooms || [room, ...similarRooms]).filter(item => item.city === city).length,
+    onRevealCity: revealCityOnHome
+  });
 
   useEffect(() => {
     try {
@@ -103,15 +98,8 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
   });
 
   useEffect(() => {
-    if (!toast) return undefined;
-    toastTimerRef.current = window.setTimeout(() => setToast(''), 3200);
-    return () => window.clearTimeout(toastTimerRef.current);
-  }, [toast]);
-
-  useEffect(() => {
     const onKeyDown = event => {
       if (event.key === 'Escape') {
-        setModalOpen(false);
         setLightboxOpen(false);
       }
       if (lightboxOpen && event.key === 'ArrowLeft') {
@@ -140,6 +128,13 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
     setFavorite(room.id);
   }
 
+  function revealCityOnHome(city) {
+    try {
+      sessionStorage.setItem('staybridge-chat-city', city);
+    } catch {}
+    window.location.assign('/#rooms');
+  }
+
   function scrollToFirstImage(index) {
     setGalleryIndex(index);
   }
@@ -153,44 +148,6 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
     setLightboxOpen(false);
   }
 
-  function openContact(mode = 'consultation', roomName = room.name) {
-    setContactMode(mode);
-    setContactRoomName(roomName);
-    setContactCheckIn(detailCheckIn);
-    setContactGuests(detailGuests);
-    setContactError('');
-    setModalOpen(true);
-  }
-
-  function closeContact() {
-    setModalOpen(false);
-  }
-
-  function validateContact() {
-    const phone = customerPhone.replace(/\s+/g, '');
-    const phonePattern = /^(0|\+84)(3|5|7|8|9)\d{8}$/;
-    if (customerName.trim().length < 2) return 'Vui lòng nhập họ và tên hợp lệ.';
-    if (!phonePattern.test(phone)) return 'Vui lòng nhập số điện thoại Việt Nam hợp lệ.';
-    if (!contactCheckIn) return 'Vui lòng chọn ngày nhận phòng.';
-    if (!contactGuests) return 'Vui lòng chọn số khách.';
-    return '';
-  }
-
-  function submitContact(event) {
-    event.preventDefault();
-    const error = validateContact();
-    setContactError(error);
-    if (error) return;
-
-    setCustomerName('');
-    setCustomerPhone('');
-    setCustomerMessage('');
-    setContactCheckIn(initialToday);
-    setContactGuests('');
-    setModalOpen(false);
-    setToast('Gửi yêu cầu thành công. StayBridge sẽ sớm liên hệ với bạn.');
-  }
-
   function shareRoom() {
     const shareData = {
       title: room.name,
@@ -199,14 +156,12 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
     };
 
     if (navigator.share) {
-      navigator.share(shareData).catch(error => {
-        if (error?.name !== 'AbortError') setToast('Không thể chia sẻ liên kết lúc này.');
-      });
+      navigator.share(shareData).catch(() => {});
       return;
     }
 
     if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(window.location.href).then(() => setToast('Đã sao chép liên kết phòng.'));
+      navigator.clipboard.writeText(window.location.href).catch(() => {});
       return;
     }
 
@@ -216,7 +171,6 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
     temp.select();
     document.execCommand('copy');
     temp.remove();
-    setToast('Đã sao chép liên kết phòng.');
   }
 
   function renderStars(rating, prefix = 'star') {
@@ -236,7 +190,7 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
           { href: '/#partners', label: 'Đối tác' },
           { href: '#contact', label: 'Liên hệ' }
         ]}
-        onCta={() => openContact('consultation')}
+        onCta={chat.openAdviceChat}
       />
 
       <main className="detail-main">
@@ -295,7 +249,12 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
                 id="bookingForm"
                 onSubmit={event => {
                   event.preventDefault();
-                  openContact('booking');
+                  chat.openRoomBookingChat({
+                    room,
+                    checkIn: detailCheckIn,
+                    checkOut: detailCheckOut,
+                    guests: `${detailGuests} khách`
+                  });
                 }}
               >
                 <label>
@@ -339,7 +298,7 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
                 <button className="button button-primary full-width open-contact" type="submit">
                   Đặt phòng
                 </button>
-                <button className="button button-secondary full-width open-contact" type="button" onClick={() => openContact('consultation')}>
+                <button className="button button-secondary full-width open-contact" type="button" onClick={() => chat.openRoomContactChat(room)}>
                   Liên hệ ngay
                 </button>
               </form>
@@ -659,7 +618,7 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
                     room={item}
                     favorite={favorite}
                     onToggleFavorite={() => setFavorite(item.id)}
-                    onContact={() => openContact('booking', item.name)}
+                    onContact={chat.openRoomContactChat}
                   />
                 );
               })}
@@ -731,21 +690,17 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
         </button>
       </div>
 
-      <ChatBubble
-        open={modalOpen}
-        mode={contactMode}
-        roomName={contactRoomName}
-        checkIn={contactCheckIn}
-        checkOut={detailCheckOut}
-        guests={contactGuests}
-        onOpen={() => setModalOpen(true)}
-        onClose={closeContact}
+      <ChatWidget
+        open={chat.open}
+        typing={chat.typing}
+        messages={chat.messages}
+        hasConversation={chat.hasConversation}
+        onOpen={chat.openChat}
+        onClose={chat.closeChat}
+        onQuickAction={chat.handleQuickAction}
+        onSendMessage={chat.sendManualMessage}
       />
 
-      <div className={`toast${toast ? ' show' : ''}`} id="toast" role="status" aria-live="polite">
-        <i data-lucide="circle-check" />
-        <span>{toast || 'Gửi yêu cầu thành công.'}</span>
-      </div>
     </>
   );
 }
