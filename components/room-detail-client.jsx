@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { addDaysISO, todayISO } from '../lib/date-utils';
-import ChatBubble from './chat-bubble';
+import { createGeneralContactRequest, createRoomBookingRequest, createRoomContactRequest } from '../lib/contact-requests';
+import ContactModal from './contact-modal';
 import RoomCard from './room-card';
 import SiteHeader from './site-header';
 
@@ -60,15 +61,8 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
   const [reviewsExpanded, setReviewsExpanded] = useState(false);
   const [descriptionCollapsed, setDescriptionCollapsed] = useState(true);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [contactMode, setContactMode] = useState('consultation');
-  const [contactRoomName, setContactRoomName] = useState(room.name);
-  const [customerName, setCustomerName] = useState('');
-  const [customerPhone, setCustomerPhone] = useState('');
-  const [contactCheckIn, setContactCheckIn] = useState(initialToday);
-  const [contactGuests, setContactGuests] = useState('');
-  const [customerMessage, setCustomerMessage] = useState('');
-  const [contactError, setContactError] = useState('');
+  const [contactModalOpen, setContactModalOpen] = useState(false);
+  const [contactRequest, setContactRequest] = useState(null);
   const [toast, setToast] = useState('');
   const [detailCheckIn, setDetailCheckIn] = useState(initialToday);
   const [detailCheckOut, setDetailCheckOut] = useState(initialTomorrow);
@@ -111,8 +105,8 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
   useEffect(() => {
     const onKeyDown = event => {
       if (event.key === 'Escape') {
-        setModalOpen(false);
         setLightboxOpen(false);
+        setContactModalOpen(false);
       }
       if (lightboxOpen && event.key === 'ArrowLeft') {
         setGalleryIndex(index => (index - 1 + room.images.length) % room.images.length);
@@ -153,42 +147,28 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
     setLightboxOpen(false);
   }
 
-  function openContact(mode = 'consultation', roomName = room.name) {
-    setContactMode(mode);
-    setContactRoomName(roomName);
-    setContactCheckIn(detailCheckIn);
-    setContactGuests(detailGuests);
-    setContactError('');
-    setModalOpen(true);
+  function openGeneralConsultation() {
+    setContactRequest(createGeneralContactRequest());
+    setContactModalOpen(true);
   }
 
-  function closeContact() {
-    setModalOpen(false);
+  function openRoomContact(targetRoom = room) {
+    setContactRequest(createRoomContactRequest(targetRoom?.name));
+    setContactModalOpen(true);
   }
 
-  function validateContact() {
-    const phone = customerPhone.replace(/\s+/g, '');
-    const phonePattern = /^(0|\+84)(3|5|7|8|9)\d{8}$/;
-    if (customerName.trim().length < 2) return 'Vui lòng nhập họ và tên hợp lệ.';
-    if (!phonePattern.test(phone)) return 'Vui lòng nhập số điện thoại Việt Nam hợp lệ.';
-    if (!contactCheckIn) return 'Vui lòng chọn ngày nhận phòng.';
-    if (!contactGuests) return 'Vui lòng chọn số khách.';
-    return '';
+  function openRoomBooking(targetRoom = room) {
+    setContactRequest(createRoomBookingRequest(targetRoom?.name));
+    setContactModalOpen(true);
   }
 
-  function submitContact(event) {
-    event.preventDefault();
-    const error = validateContact();
-    setContactError(error);
-    if (error) return;
+  function closeContactModal() {
+    setContactModalOpen(false);
+  }
 
-    setCustomerName('');
-    setCustomerPhone('');
-    setCustomerMessage('');
-    setContactCheckIn(initialToday);
-    setContactGuests('');
-    setModalOpen(false);
-    setToast('Gửi yêu cầu thành công. StayBridge sẽ sớm liên hệ với bạn.');
+  function submitContactRequest() {
+    setContactModalOpen(false);
+    setToast('Roovia Ä‘Ã£ nháº­n thÃ´ng tin cá»§a báº¡n vÃ  sáº½ chá»§ Ä‘á»™ng liÃªn há»‡ sá»›m.');
   }
 
   function shareRoom() {
@@ -236,7 +216,7 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
           { href: '/#partners', label: 'Đối tác' },
           { href: '#contact', label: 'Liên hệ' }
         ]}
-        onCta={() => openContact('consultation')}
+        onCta={openGeneralConsultation}
       />
 
       <main className="detail-main">
@@ -295,7 +275,7 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
                 id="bookingForm"
                 onSubmit={event => {
                   event.preventDefault();
-                  openContact('booking');
+                  openRoomBooking(room);
                 }}
               >
                 <label>
@@ -337,9 +317,9 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
                   </select>
                 </label>
                 <button className="button button-primary full-width open-contact" type="submit">
-                  Đặt phòng
+                  Đặt ngay
                 </button>
-                <button className="button button-secondary full-width open-contact" type="button" onClick={() => openContact('consultation')}>
+                <button className="button button-secondary full-width open-contact" type="button" onClick={() => openRoomContact(room)}>
                   Liên hệ ngay
                 </button>
               </form>
@@ -659,7 +639,7 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
                     room={item}
                     favorite={favorite}
                     onToggleFavorite={() => setFavorite(item.id)}
-                    onContact={() => openContact('booking', item.name)}
+                    onContact={openRoomContact}
                   />
                 );
               })}
@@ -712,6 +692,14 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
         </div>
       </footer>
 
+      <ContactModal
+        open={contactModalOpen}
+        request={contactRequest}
+        onClose={closeContactModal}
+        onSubmit={submitContactRequest}
+        onToast={setToast}
+      />
+
       <div className={`lightbox${lightboxOpen ? ' open' : ''}`} id="lightbox" aria-hidden={!lightboxOpen} role="dialog" aria-modal="true" aria-label="Thư viện ảnh">
         <div className="lightbox-backdrop" data-close-lightbox onClick={closeLightbox} />
         <button className="icon-button lightbox-close" type="button" data-close-lightbox aria-label="Đóng thư viện" onClick={closeLightbox}>
@@ -730,18 +718,6 @@ export default function RoomDetailClient({ room, similarRooms, reviews, initialT
           <i data-lucide="chevron-right" />
         </button>
       </div>
-
-      <ChatBubble
-        open={modalOpen}
-        mode={contactMode}
-        roomName={contactRoomName}
-        checkIn={contactCheckIn}
-        checkOut={detailCheckOut}
-        guests={contactGuests}
-        onOpen={() => setModalOpen(true)}
-        onClose={closeContact}
-      />
-
       <div className={`toast${toast ? ' show' : ''}`} id="toast" role="status" aria-live="polite">
         <i data-lucide="circle-check" />
         <span>{toast || 'Gửi yêu cầu thành công.'}</span>

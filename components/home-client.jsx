@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { addDaysISO, todayISO } from '../lib/date-utils';
-import ChatBubble from './chat-bubble';
+import { createGeneralContactRequest, createPartnerContactRequest, createRoomContactRequest } from '../lib/contact-requests';
+import ContactModal from './contact-modal';
 import RoomCard from './room-card';
 import SiteHeader from './site-header';
 
@@ -62,17 +63,8 @@ export default function HomeClient({ rooms, destinations, initialToday: initialT
   const [favorites, setFavorites] = useState([]);
   const [favoritesReady, setFavoritesReady] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [contactMode, setContactMode] = useState('consultation');
-  const [contactRoomName, setContactRoomName] = useState('');
-  const [contactRoomId, setContactRoomId] = useState('');
-  const [customerName, setCustomerName] = useState('');
-  const [customerPhone, setCustomerPhone] = useState('');
-  const [contactCheckIn, setContactCheckIn] = useState(initialToday);
-  const [contactCheckOut, setContactCheckOut] = useState(initialTomorrow);
-  const [contactGuests, setContactGuests] = useState('');
-  const [customerMessage, setCustomerMessage] = useState('');
-  const [contactError, setContactError] = useState('');
+  const [contactModalOpen, setContactModalOpen] = useState(false);
+  const [contactRequest, setContactRequest] = useState(null);
   const [toast, setToast] = useState('');
   const sliderRef = useRef(null);
   const toastTimerRef = useRef(null);
@@ -114,7 +106,7 @@ export default function HomeClient({ rooms, destinations, initialToday: initialT
     const onKeyDown = event => {
       if (event.key === 'Escape') {
         setDrawerOpen(false);
-        setModalOpen(false);
+        setContactModalOpen(false);
       }
     };
 
@@ -198,48 +190,32 @@ export default function HomeClient({ rooms, destinations, initialToday: initialT
     document.getElementById('rooms')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function openContact(roomName = '', roomId = '', mode = 'consultation') {
-    setContactMode(mode);
-    setContactRoomName(roomName);
-    setContactRoomId(roomId);
-    setContactCheckIn(heroCheckIn);
-    setContactCheckOut(heroCheckOut);
-    setContactGuests(heroGuests);
-    setContactError('');
-    setModalOpen(true);
+  function openGeneralConsultation() {
+    setContactRequest(createGeneralContactRequest());
+    setContactModalOpen(true);
   }
 
-  function closeContact() {
-    setModalOpen(false);
+  function openPartnerConsultation() {
+    setContactRequest(createPartnerContactRequest());
+    setContactModalOpen(true);
+  }
+
+  function openRoomContact(room) {
+    setContactRequest(createRoomContactRequest(room?.name));
+    setContactModalOpen(true);
+  }
+
+  function closeContactModal() {
+    setContactModalOpen(false);
+  }
+
+  function submitContactRequest() {
+    setContactModalOpen(false);
+    setToast('Roovia đã nhận thông tin của bạn và sẽ chủ động liên hệ sớm.');
   }
 
   function scrollFavorites(offset) {
     sliderRef.current?.scrollBy({ left: offset, behavior: 'smooth' });
-  }
-
-  function validateContact() {
-    const phone = customerPhone.replace(/\s+/g, '');
-    const phonePattern = /^(0|\+84)(3|5|7|8|9)\d{8}$/;
-    if (customerName.trim().length < 2) return 'Vui lòng nhập họ và tên hợp lệ.';
-    if (!phonePattern.test(phone)) return 'Vui lòng nhập số điện thoại Việt Nam hợp lệ.';
-    if (!contactCheckIn) return 'Vui lòng chọn ngày nhận phòng.';
-    if (!contactGuests) return 'Vui lòng chọn số khách.';
-    return '';
-  }
-
-  function submitContact(event) {
-    event.preventDefault();
-    const error = validateContact();
-    setContactError(error);
-    if (error) return;
-
-    setCustomerName('');
-    setCustomerPhone('');
-    setCustomerMessage('');
-    setContactCheckIn(initialToday);
-    setContactGuests('');
-    setModalOpen(false);
-    setToast('Gửi yêu cầu thành công. StayBridge sẽ sớm liên hệ với bạn.');
   }
 
   const featuredRooms = rooms.filter(room => room.featured).slice(0, 6);
@@ -254,7 +230,7 @@ export default function HomeClient({ rooms, destinations, initialToday: initialT
           { href: '#partners', label: 'Đối tác' },
           { href: '#contact', label: 'Liên hệ' }
         ]}
-        onCta={() => openContact('', '', 'consultation')}
+        onCta={openGeneralConsultation}
       />
 
       <main id="top">
@@ -570,7 +546,7 @@ export default function HomeClient({ rooms, destinations, initialToday: initialT
                     room={room}
                     favorite={favorite}
                     onToggleFavorite={() => toggleFavorite(room.id)}
-                    onContact={() => openContact(room.name, room.id, 'booking')}
+                    onContact={openRoomContact}
                   />
                 );
                 })}
@@ -646,7 +622,7 @@ export default function HomeClient({ rooms, destinations, initialToday: initialT
                 thống vận hành phức tạp.
               </p>
             </div>
-            <button className="button button-primary" type="button" onClick={() => openContact('', '', 'consultation')}>
+            <button className="button button-primary" type="button" onClick={openPartnerConsultation}>
               Trở thành đối tác
             </button>
           </div>
@@ -729,18 +705,15 @@ export default function HomeClient({ rooms, destinations, initialToday: initialT
         </div>
       </footer>
 
-      <ChatBubble
-        open={modalOpen}
-        mode={contactMode}
-        roomName={contactRoomName}
-        checkIn={contactCheckIn}
-        checkOut={contactCheckOut}
-        guests={contactGuests}
-        onOpen={() => setModalOpen(true)}
-        onClose={closeContact}
+      <ContactModal
+        open={contactModalOpen}
+        request={contactRequest}
+        onClose={closeContactModal}
+        onSubmit={submitContactRequest}
+        onToast={setToast}
       />
 
-      <div className={`toast${toast ? ' show' : ''}`} id="toast" role="status" aria-live="polite">
+      <div className={`toast${toast ? ' show' : ''}`} role="status" aria-live="polite">
         <i data-lucide="circle-check" />
         <span>{toast || 'Gửi yêu cầu thành công.'}</span>
       </div>
