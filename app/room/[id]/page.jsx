@@ -41,5 +41,5 @@ export default async function RoomPage({ params }) {
     })
     .slice(0, 4);
 
-  return <RoomDetailClient room={room} similarRooms={similarRooms} reviews={reviews} allRooms={rooms} initialToday={todayISO()} />;
+  return <RoomDetailClient room={room} similarRooms={similarRooms} reviews={reviews} initialToday={todayISO()} />;
 }
