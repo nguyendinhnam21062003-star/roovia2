@@ -6,7 +6,7 @@
   .room-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .detail-gallery-grid { grid-template-columns: minmax(0, 1fr) 310px; }
   .gallery-panel { min-height: 440px; }
-  .detail-info-cards { grid-template-columns: repeat(2, 1fr); }
+  .detail-info-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .detail-facts { grid-template-columns: repeat(3, 1fr); }
   .similar-grid { grid-template-columns: repeat(3, 1fr); }
   .similar-card:nth-child(4) { display: none; }
@@ -75,12 +75,31 @@
   .gallery-panel { min-height: 480px; }
   .amenity-groups { grid-template-columns: repeat(2, 1fr); }
   .review-overview { grid-template-columns: 1fr; }
+  .drawer-lab-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 767px) {
   body { font-size: 14px; }
   .container { width: min(calc(100% - 24px), 720px); }
   .section { padding: 64px 0; }
+  .drawer-lab-page { padding: 96px 0 72px; }
+  .drawer-lab-topbar { flex-direction: column; align-items: stretch; }
+  .drawer-lab-back { width: 100%; }
+  .drawer-lab-grid { grid-template-columns: 1fr; }
+  .drawer-lab-card { min-height: auto; }
+  .drawer-lab-panel {
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    left: auto;
+    width: min(420px, calc(100vw - 20px));
+    border-radius: 24px;
+  }
+  .drawer-lab-panel--clean { --drawer-width: min(420px, calc(100vw - 20px)); --drawer-radius: 24px; }
+  .drawer-lab-panel-body { padding: 14px; }
+  .drawer-lab-facts { grid-template-columns: 1fr; }
+  .drawer-lab-panel-footer { flex-direction: column; align-items: stretch; }
+  .drawer-lab-panel-footer .button { width: 100%; }
   .header-inner { gap: 10px; }
   .brand-copy strong { font-size: 17px; }
   .brand-copy small { display: none; }
@@ -109,6 +128,31 @@
   .room-card-bottom .button { min-height: 44px; }
   .destination-grid { grid-template-columns: 1fr; }
   .destination-card { min-height: 250px; }
+  .chat-widget { height: min(88vh, 760px); border-radius: 22px 22px 0 0; }
+  .chat-widget-shell { width: calc(100vw - 20px); }
+  .chat-widget-handle { margin-top: 10px; }
+  .chat-widget--bottom {
+    height: min(88vh, 760px);
+    border-radius: 22px 22px 0 0;
+  }
+  .chat-launcher {
+    right: 10px;
+    bottom: 10px;
+    width: 56px;
+    height: 56px;
+  }
+  .chat-widget-thread { width: 100%; padding: 12px 10px 14px; }
+  .chat-widget-composer { width: 100%; padding: 12px 0 14px; }
+  .chat-widget-input-shell { gap: 6px; padding: 6px; }
+  .chat-widget-send { min-width: 92px; padding: 0 12px; }
+  .chat-reply-actions {
+    flex-direction: column;
+  }
+  .chat-action-link,
+  .chat-action-tag {
+    width: 100%;
+    justify-content: center;
+  }
   .partner-panel { padding: 30px 24px; }
   .partner-panel .button { width: 100%; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
@@ -158,4 +202,15 @@
   .detail-facts { grid-template-columns: 1fr; }
   .room-title-actions { flex-direction: column; }
   .amenity-group ul { grid-template-columns: 1fr; }
+  .chat-message { max-width: 92%; }
+  .chat-launcher {
+    right: 10px;
+    bottom: 10px;
+  }
+  .chat-reply-card { padding: 12px; }
+  .drawer-lab-panel-header { padding: 16px 14px 14px; }
+  .drawer-lab-panel-copy h2 { font-size: 21px; }
+  .drawer-lab-card { padding: 20px; }
+  .drawer-lab-card h2 { font-size: 21px; }
+  .drawer-lab-card-actions { padding-top: 16px; }
 }
